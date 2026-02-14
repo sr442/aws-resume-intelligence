@@ -30,7 +30,13 @@ jobs:
           # Or use access keys (less secure) stored in GitHub Secrets
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # Change to your region
+          aws-region: us-east-1
+
+      - name: Check for Secrets
+        if: ${{ failure() }}
+        run: |
+          if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then echo "AWS_ACCESS_KEY_ID is missing or empty"; else echo "AWS_ACCESS_KEY_ID is present"; fi
+          if [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then echo "AWS_SECRET_ACCESS_KEY is missing or empty"; else echo "AWS_SECRET_ACCESS_KEY is present"; fi
 
       - name: Install Dependencies (Infrastructure)
         run: |
